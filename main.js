@@ -381,8 +381,8 @@ console.log( 'The sum of all purhcases is:', sumPurchases );
   - Unlike 'QUESTION 08' and 'QUESTION 09', here we're interested in both 'sale' and 'purchase' transactions.
 */
 
-var positiveflow = 0;
-var negativeflow = 0;
+var positiveFlow = 0;
+var negativeFlow = 0;
 
 
 transactions.forEach(function(transaction){
