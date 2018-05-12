@@ -132,6 +132,14 @@ console.log( 'The total number of transactions is:', totalTransactions );
 */
 var numSales;
 
+var numSales = 0;
+for (var i = 0; i < transactions.length; i++) {
+  if (transactions[i].type === 'sale') {
+    transactions[i].items.forEach(function(sale) {
+      numSales += sale.price;
+    })
+  }
+}
 /*
   Hey, welcome to the first question!
 
@@ -160,7 +168,16 @@ console.log( 'The total number of sales is:', numSales );
 /*
   Calculate the total number of 'purchases'.
 */
-var numPurchases;
+var numPurchases = 0;
+
+for (var i = 0; i < transactions.length; i++) {
+  if (transactions[i].type === 'purchase') {
+    transactions[i].items.forEach(function(purchase){
+      //console.log(Math.abs(purchase.price));
+      numPurchases += Math.abs(purchase.price);
+    })
+  }
+}
 
 console.log( 'The total number of purchases is:', numPurchases );
 
@@ -174,11 +191,21 @@ console.log( 'The total number of purchases is:', numPurchases );
   HINT(S):
   - Don't forget that 'purchases' can also be made in 'cash'!
 */
-var numCashSales;
+var numCashSales = 0;
 
+// console.log( 'The total number of cash sales is:', numCashSales );
+// for (var i = 0; i < transactions.length; i++) {
+//   if (transactions[i].paymentMethod === 'cash') {
+//     numCashSales += 1;
+//   }
+// }
+
+transactions.forEach(function(transaction){
+  if (transaction.type === 'sale' && transaction.paymentMethod === 'cash') {
+    numCashSales += 1;
+  }
+})
 console.log( 'The total number of cash sales is:', numCashSales );
-
-
 // --------------------------------------------------
 // QUESTION 04
 // --------------------------------------------------
@@ -188,7 +215,13 @@ console.log( 'The total number of cash sales is:', numCashSales );
   HINT(S):
   - Make sure to exclude any 'sales' made by 'credit'!
 */
-var numCreditPurchases;
+var numCreditPurchases = 0;
+
+transactions.forEach(function(transaction) {
+  if(transaction.type === 'purchase' && transaction.paymentMethod === 'credit') {
+    numCreditPurchases += 1;
+  }
+})
 
 console.log( 'The total number of credit purchases is:', numCreditPurchases );
 
@@ -205,7 +238,39 @@ console.log( 'The total number of credit purchases is:', numCreditPurchases );
   - The assembled array should be made up of strings, not full `transaction` objects.
   - This array is allowed to contain duplicate values.
 */
-var allVendors;
+var allVendors = 0;
+var vendors = [];
+
+transactions.forEach(function(transaction){
+  if(transaction.vendor != undefined){
+    vendors.push(transaction.vendor);
+  }
+})
+var seen = [];
+  var uniq = [];
+  
+function FindUniqVendor(collection){
+  var aVendor = undefined
+
+  for(var i=0; i < collection.length; i++){
+        aVendor = vendors[i]
+      }
+
+  collection.forEach(function(vendor) {
+    seen.push(vendor)
+    seen.forEach(function(seenVendor){
+
+      if(aVendor != seenVendor){
+        return uniq.push('hi')
+      }
+    })
+  })
+}
+
+FindUniqVendor(vendors)
+
+console.log(uniq)
+
 
 console.log( 'The vendors are:', allVendors );
 
@@ -217,12 +282,29 @@ console.log( 'The vendors are:', allVendors );
   Create an array that includes all of the *unique* customers which appear in the transactions data set.
   eg. `[ 'customer one', 'customer two', ... ]
 
+
   HINT(S):
   - Not all transactions have a 'customer'!
   - The assembled array should be made up of strings, not full `transaction` objects.
   - Make sure that the resulting array *does not* include any duplicates.
 */
-var uniqueCustomers;
+
+var customers = []
+transactions.forEach(function(transaction){
+  if (transaction.customer != undefined) {
+    customers.push (transaction.customer)
+  }
+})
+
+function findUniqCustomers(customerName){
+  for (var i = 0; i < customers.length; i++){
+    if (customers[i] == customerName) {
+      return customerName
+    }
+  }
+}
+
+var uniqueCustomers = customers.filter(findUniqCustomers)
 
 console.log( 'The unique customers are:', uniqueCustomers );
 
@@ -240,8 +322,18 @@ console.log( 'The unique customers are:', uniqueCustomers );
   - There may be more than 1 'sale' that includes 5 or more items.
   - Individual transactions do not have either `name` or `numItems` properties, we'll have to add them to the output.
 */
-var bigSpenders;
-
+var bigSpenders = [];
+var customer_hash = {};
+transactions.forEach(function(transaction){
+  if(transaction.items.length >= 5 && transaction.type === 'sale' && transaction.customer != undefined){
+    // console.log(transaction)
+    // if(transaction.customer != undefined){
+      customer_hash['name'] = transaction.customer
+      customer_hash['numItems'] = transaction.items.length
+    // } //else if (transaction.vendo)
+  }
+})
+console.log(customer_hash)
 console.log( 'The "big spenders" are:', bigSpenders );
 
 
@@ -288,11 +380,24 @@ console.log( 'The sum of all purhcases is:', sumPurchases );
   HINT(S):
   - Unlike 'QUESTION 08' and 'QUESTION 09', here we're interested in both 'sale' and 'purchase' transactions.
 */
-var netProfit;
 
+var positiveflow = 0;
+var negativeflow = 0;
+
+
+transactions.forEach(function(transaction){
+  if(transaction.type === 'sale'){
+    transaction.items.forEach(function(item){
+      positiveFlow += item.price
+    })
+  } else if (transaction.type === 'purchase'){
+    transaction.items.forEach(function(item){
+      negativeFlow += item.price
+    })
+  }
+})
+var netProfit = positiveFlow- negativeFlow;
 console.log( 'The net profit is:', netProfit );
-
-
 // --------------------------------------------------
 // QUESTION 11
 // --------------------------------------------------
